@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+web/node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+web/.env.local
+!web/.env.local.example
+
+# Build output
+web/.next/
+web/out/
+
+# Misc
+.DS_Store
+*.log
+_*.html
+_*.json

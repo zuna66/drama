@@ -1,0 +1,20 @@
+{
+  "name": "Dramabox Sankanime",
+  "version": "1.0.0",
+  "description": "Dramabox Sankanime API Server",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --env-file=.env server.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "cheerio": "^1.0.0-rc.12",
+    "ejs": "^3.1.10",
+    "express": "^4.18.3",
+    "heic-convert": "^2.1.0",
+    "node-cache": "^5.1.2",
+    "rate-limiter-flexible": "2.4.1"
+  }
+}

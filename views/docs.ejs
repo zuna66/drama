@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Dramabox API Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .rotate-90 { transform: rotate(90deg); }
+        .chapter-input-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        pre { outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+        .json-key { color: #9cdcfe; font-weight: bold; }      
+        .json-string { color: #ce9178; }     
+        .json-number { color: #b5cea8; }     
+        .json-boolean { color: #569cd6; }   
+        .json-null { color: #569cd6; }     
+    </style>
+</head>
+
+<body class="bg-black text-white min-h-screen antialiased font-sans selection:bg-blue-500 selection:text-white">
+
+<nav class="sticky top-0 z-50 border-b border-gray-800 bg-black/80 backdrop-blur-lg">
+    <div class="container mx-auto flex h-16 items-center justify-between px-4 max-w-5xl">
+        <h1 class="text-xl font-bold tracking-tight">
+            <i class="fa-solid fa-film text-blue-500 mr-2"></i>Dramabox <span class="text-blue-500">Api</span>
+        </h1>
+
+        <div class="relative">
+            <button id="langDropdownBtn"
+                class="flex h-9 items-center justify-between rounded-md border border-gray-700 hover:border-blue-500 px-3 py-2 text-sm w-[160px] transition-colors">
+                <span id="currentLang">🇮🇩 Indonesia</span>
+                <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+            </button>
+
+            <div id="langMenu"
+                class="hidden absolute right-0 mt-2 w-[180px] rounded-md border border-gray-700 bg-gray-900 shadow-xl z-50 overflow-hidden">
+                <div id="langOptionsContainer"></div>
+            </div>
+        </div>
+    </div>
+</nav>
+        
+<main class="container max-w-5xl mx-auto px-4 py-12">
+
+    <div class="flex items-center justify-between mb-8 flex-wrap gap-4 border-b border-gray-800 pb-4">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-gray-400 flex items-center gap-2">
+            <i class="fa-solid fa-book-open"></i> Dokumentasi Endpoint
+        </h2>
+
+        <div id="baseUrlBox"
+            class="inline-flex items-center rounded-md border border-blue-500/30 bg-blue-500/10 px-3 py-1.5 text-xs font-mono gap-2 text-blue-400">
+            <span class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+            <span id="baseUrlText">Detecting...</span>
+        </div>
+    </div>
+
+    <p class="text-sm mb-8 text-gray-400">
+        Selamat datang di dokumentasi API Server Dramabox.
+        Klik endpoint di bawah untuk melihat detail dan melakukan <b>Live Test</b>.
+    </p>
+
+    <div id="endpoint-list" class="space-y-4">
+
+        <div class="flex items-center justify-between mb-4 border-b border-gray-800 pb-4">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-blue-400 flex items-center gap-2">
+                <i class="fa-solid fa-film"></i> Dramabox Endpoints
+            </h2>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('list-lang')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Daftar Bahasa</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/list-lang</code>
+                </div>
+                <i id="arrow-list-lang" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-list-lang" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <button id="btn-list-lang" onclick="testGetEndpoint('list-lang', '/api/list-lang', {})" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-list-lang" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-list-lang" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('random')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Random Drama</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/random</code>
+                </div>
+                <i id="arrow-random" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-random" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Mengambil drama secara acak dari berbagai sumber (Foryou, Recommended, VIP, dll).</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">count (Jumlah)</label>
+                        <input type="number" id="input-random-count" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-random" onclick="testGetEndpoint('random', '/api/random', { count: document.getElementById('input-random-count').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-random" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-random" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('search')">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Cari Drama</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/search</code>
+                </div>
+                <i id="arrow-search" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-search" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Mencari drama berdasarkan kata kunci.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">keyword</label>
+                        <input type="text" id="input-search-keyword" value="ceo" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none transition">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-search-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none transition">
+                    </div>
+                </div>
+                <button id="btn-search" onclick="testGetEndpoint('search', '/api/search', { keyword: document.getElementById('input-search-keyword').value, page: document.getElementById('input-search-page').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-search" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-search" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('search-suggest')">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Saran Pencarian (Suggest)</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/search/suggest</code>
+                </div>
+                <i id="arrow-search-suggest" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-search-suggest" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Mendapatkan saran pencarian otomatis (autocomplete).</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">keyword</label>
+                        <input type="text" id="input-suggest-keyword" value="ceo" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none transition">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-suggest-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none transition">
+                    </div>
+                </div>
+                <button id="btn-search-suggest" onclick="testGetEndpoint('search-suggest', '/api/search/suggest', { keyword: document.getElementById('input-suggest-keyword').value, page: document.getElementById('input-suggest-page').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-search-suggest" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-search-suggest" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+       
+        <div class="rounded-lg border border-yellow-900/30 bg-gray-900 overflow-hidden transition-all hover:border-yellow-700 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-yellow-900/10 transition" onclick="toggleAccordion('vip')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-yellow-600/20 text-yellow-400 border border-yellow-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-yellow-400">Vip Channel</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/vip</code>
+                </div>
+                <i id="arrow-vip" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-vip" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Mengambil daftar rekomendasi drama dari channel VIP/Theater.</p>
+                <button id="btn-vip" onclick="testGetEndpoint('vip', '/api/vip', {})" 
+                    class="bg-yellow-600 hover:bg-yellow-700 text-black px-4 py-2 rounded text-xs font-bold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-crown text-[10px]"></i> Ambil Data VIP
+                </button>
+                <div id="result-header-vip" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-vip" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('home')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Home</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/home</code>
+                </div>
+                <i id="arrow-home" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-home" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-home-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">size</label>
+                        <input type="number" id="input-home-size" value="10" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-home" onclick="testGetEndpoint('home', '/api/home', { page: document.getElementById('input-home-page').value, size: document.getElementById('input-home-size').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-home" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-home" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('latest')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Latest</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/latest</code>
+                </div>
+                <i id="arrow-latest" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-latest" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-latest-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">size</label>
+                        <input type="number" id="input-latest-size" value="10" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-latest" onclick="testGetEndpoint('latest', '/api/latest', { page: document.getElementById('input-latest-page').value, size: document.getElementById('input-latest-size').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-latest" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-latest" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+         <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('popular')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Popular</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/popular</code>
+                </div>
+                <i id="arrow-popular" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-popular" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-popular-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">size</label>
+                        <input type="number" id="input-popular-size" value="10" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-popular" onclick="testGetEndpoint('popular', '/api/popular', { page: document.getElementById('input-popular-page').value, size: document.getElementById('input-popular-size').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-popular" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-popular" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('popular-search')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Popular Search</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/popular-search</code>
+                </div>
+                <i id="arrow-popular-search" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-popular-search" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <button id="btn-popular-search" onclick="testGetEndpoint('popular-search', '/api/popular-search', {})" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-popular-search" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-popular-search" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('recommend')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Rekomendasi</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/recommend</code>
+                </div>
+                <i id="arrow-recommend" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-recommend" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <button id="btn-recommend" onclick="testGetEndpoint('recommend', '/api/recommend', {})" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-recommend" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-recommend" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('foryou')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Foryou</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/foryou</code>
+                </div>
+                <i id="arrow-foryou" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-foryou" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-newlist-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">size</label>
+                        <input type="number" id="input-newlist-size" value="15" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-foryou" onclick="testGetEndpoint('foryou', '/api/foryou', { page: document.getElementById('input-newlist-page').value, size: document.getElementById('input-newlist-size').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-foryou" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-foryou" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('sulih-suara')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Sulih Suara (Dubbing)</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/sulih-suara</code>
+                </div>
+                <i id="arrow-sulih-suara" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-sulih-suara" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Shortcut untuk mendapatkan daftar drama yang sudah di-dubbing (Sulih Suara).</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-sulih-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">size</label>
+                        <input type="number" id="input-sulih-size" value="10" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-sulih-suara" onclick="testGetEndpoint('sulih-suara', '/api/sulih-suara', { page: document.getElementById('input-sulih-page').value, size: document.getElementById('input-sulih-size').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-sulih-suara" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-sulih-suara" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('categories')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Daftar Kategori</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/categories</code>
+                </div>
+                <i id="arrow-categories" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-categories" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <button id="btn-categories" onclick="testGetEndpoint('categories', '/api/categories', {})" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-categories" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-categories" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('category')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Drama per Kategori</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/category/:id</code>
+                </div>
+                <i id="arrow-category" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-category" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">id</label>
+                        <input type="number" id="input-category-id" value="449" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-category-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">size</label>
+                        <input type="number" id="input-category-size" value="10" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-category" onclick="testGetEndpoint('category', '/api/category/:id', { id: document.getElementById('input-category-id').value, page: document.getElementById('input-category-page').value, size: document.getElementById('input-category-size').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-category" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-category" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('list-custom')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">List Filter Options</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/list-custom</code>
+                </div>
+                <i id="arrow-list-custom" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+
+            <div id="content-list-custom" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                 <p class="mb-3 text-xs text-gray-400">Mendapatkan daftar opsi filter (Region, Format, Genre, Sort) untuk endpoint Custom Drama.</p>
+                <button id="btn-list-custom" onclick="testGetEndpoint('list-custom', '/api/list-custom', {})" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-list-custom" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-list-custom" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('custom-drama')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Custom Drama Api</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/custom-drama</code>
+                </div>
+                <i id="arrow-custom-drama" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-custom-drama" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Mencari drama dengan filter lengkap (gunakan kode dari /api/list-custom).</p>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">region (code)</label>
+                        <input type="text" id="input-custom-region" value="id" placeholder="e.g. id, cn" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">format (code)</label>
+                         <input type="text" id="input-custom-format" placeholder="e.g. sub, dub" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">genre (code)</label>
+                         <input type="text" id="input-custom-genre" placeholder="e.g. ceo" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">sort (code)</label>
+                         <input type="text" id="input-custom-sort" placeholder="e.g. popular" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-custom-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">size</label>
+                        <input type="number" id="input-custom-size" value="10" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-custom-drama" onclick="testGetEndpoint('custom-drama', '/api/custom-drama', { region: document.getElementById('input-custom-region').value, format: document.getElementById('input-custom-format').value, genre: document.getElementById('input-custom-genre').value, sort: document.getElementById('input-custom-sort').value, page: document.getElementById('input-custom-page').value, size: document.getElementById('input-custom-size').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-custom-drama" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-custom-drama" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('chapters')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Daftar Chapter</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/chapters/:bookId</code>
+                </div>
+                <i id="arrow-chapters" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-chapters" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">bookId</label>
+                    <input type="text" id="input-chapters-bookId" value="41000122558" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                </div>
+                <button id="btn-chapters" onclick="testGetEndpoint('chapters', '/api/chapters/:bookId', { bookId: document.getElementById('input-chapters-bookId').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-chapters" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-chapters" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('detail')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Detail Drama</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/detail/:bookId</code>
+                </div>
+                <i id="arrow-detail" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-detail" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">bookId</label>
+                    <input type="text" id="input-detail-bookId" value="41000122558" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                </div>
+                <button id="btn-detail" onclick="testGetEndpoint('detail', '/api/detail/:bookId', { bookId: document.getElementById('input-detail-bookId').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-detail" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-detail" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-800/50 transition" onclick="toggleAccordion('detail-v2')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-blue-600/20 text-blue-400 border border-blue-600/30">GET</span>
+                    <h3 class="font-semibold text-sm">Detail Drama (v2)</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/detail/:bookId/v2</code>
+                </div>
+                <i id="arrow-detail-v2" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-detail-v2" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">bookId</label>
+                    <input type="text" id="input-detail-v2-bookId" value="41000122558" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                </div>
+                <button id="btn-detail-v2" onclick="testGetEndpoint('detail-v2', '/api/detail/:bookId/v2', { bookId: document.getElementById('input-detail-v2-bookId').value })" 
+                    class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-detail-v2" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-detail-v2" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-green-900/30 bg-gray-900 overflow-hidden transition-all hover:border-green-700 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-green-900/10 transition" onclick="toggleAccordion('stream')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-green-600/20 text-green-400 border border-green-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-green-400">Get Stream Link per Episode</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/stream</code>
+                </div>
+                <i id="arrow-stream" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-stream" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Mendapatkan link streaming (m3u8/mp4) untuk episode tertentu.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">bookId</label>
+                        <input type="text" id="input-stream-bookId" value="41000122558" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-green-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">episode</label>
+                        <input type="number" id="input-stream-episode" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-green-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-stream" onclick="testGetEndpoint('stream', '/api/stream', { bookId: document.getElementById('input-stream-bookId').value, episode: document.getElementById('input-stream-episode').value })" 
+                    class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play-circle text-[10px]"></i> Get Stream URL
+                </button>
+                <div id="result-header-stream" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-stream" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+         <div class="rounded-lg border border-red-900/30 bg-gray-900 overflow-hidden transition-all hover:border-red-900/50 shadow-[0_0_15px_rgba(220,38,38,0.1)]">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-red-900/10 transition" onclick="toggleAccordion('download-all')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-red-600/20 text-red-400 border border-red-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-red-400">Download All Chapters</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/download/:bookId</code>
+                </div>
+                <i id="arrow-download-all" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-download-all" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Integrasi API untuk menampilkan seluruh episode drama dalam format JSON.</p>
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">bookId</label>
+                    <input type="text" id="input-download-all-bookId" value="41000122558" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-blue-500 outline-none">
+                </div>
+                <button id="btn-download-all" onclick="testGetEndpoint('download-all', '/download/:bookId', { bookId: document.getElementById('input-download-all-bookId').value })" 
+                    class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Uji Endpoint
+                </button>
+                <div id="result-header-download-all" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-download-all" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-purple-900/30 bg-gray-900 overflow-hidden transition-all hover:border-purple-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-purple-900/10 transition" onclick="toggleAccordion('gen-header1')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-purple-600/20 text-purple-400 border border-purple-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-purple-400">Refresh Token</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/refresh-token</code>
+                </div>
+                <i id="arrow-gen-header1" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-gen-header1" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Merefresh token yang digenerate oleh server.</p>
+                <button id="btn-gen-header1" onclick="testGetEndpoint('gen-header1', '/api/refresh-token', {})" 
+                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-gear text-[10px]"></i> Refresh Token
+                </button>
+                <div id="result-header-gen-header1" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-gen-header1" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-4 mt-8 pt-4 border-t border-gray-800">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group"></i> Dramabox V2 Endpoints
+            </h2>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-cyan-900/10 transition" onclick="toggleAccordion('dbv2-search')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-cyan-600/20 text-cyan-400 border border-cyan-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-cyan-200">DB V2: Search</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramaboxv2/search</code>
+                </div>
+                <i id="arrow-dbv2-search" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dbv2-search" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">q (query)</label>
+                    <input type="text" id="input-dbv2-search-q" value="ceo" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-cyan-500 outline-none">
+                </div>
+                <button id="btn-dbv2-search" onclick="testGetEndpoint('dbv2-search', '/api/dramaboxv2/search', { q: document.getElementById('input-dbv2-search-q').value })" 
+                    class="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search
+                </button>
+                <div id="result-header-dbv2-search" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dbv2-search" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-cyan-900/10 transition" onclick="toggleAccordion('dbv2-latest')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-cyan-600/20 text-cyan-400 border border-cyan-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-cyan-200">DB V2: Latest</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramaboxv2/latest</code>
+                </div>
+                <i id="arrow-dbv2-latest" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dbv2-latest" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">page</label>
+                    <input type="number" id="input-dbv2-latest-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-cyan-500 outline-none">
+                </div>
+                <button id="btn-dbv2-latest" onclick="testGetEndpoint('dbv2-latest', '/api/dramaboxv2/latest', { page: document.getElementById('input-dbv2-latest-page').value })" 
+                    class="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-clock text-[10px]"></i> Get Latest
+                </button>
+                <div id="result-header-dbv2-latest" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dbv2-latest" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-cyan-900/10 transition" onclick="toggleAccordion('dbv2-trending')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-cyan-600/20 text-cyan-400 border border-cyan-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-cyan-200">DB V2: Trending</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramaboxv2/trending</code>
+                </div>
+                <i id="arrow-dbv2-trending" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dbv2-trending" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <button id="btn-dbv2-trending" onclick="testGetEndpoint('dbv2-trending', '/api/dramaboxv2/trending', {})" 
+                    class="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-fire text-[10px]"></i> Get Trending
+                </button>
+                <div id="result-header-dbv2-trending" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dbv2-trending" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-cyan-900/10 transition" onclick="toggleAccordion('dbv2-detail')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-cyan-600/20 text-cyan-400 border border-cyan-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-cyan-200">DB V2: Detail</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramaboxv2/detail</code>
+                </div>
+                <i id="arrow-dbv2-detail" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dbv2-detail" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">bookId</label>
+                    <input type="text" id="input-dbv2-detail-id" value="42000000193" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-cyan-500 outline-none">
+                </div>
+                <button id="btn-dbv2-detail" onclick="testGetEndpoint('dbv2-detail', '/api/dramaboxv2/detail', { bookId: document.getElementById('input-dbv2-detail-id').value })" 
+                    class="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-circle-info text-[10px]"></i> Get Detail
+                </button>
+                <div id="result-header-dbv2-detail" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dbv2-detail" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-cyan-900/10 transition" onclick="toggleAccordion('dbv2-stream')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-cyan-600/20 text-cyan-400 border border-cyan-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-cyan-200">DB V2: Stream</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramaboxv2/stream</code>
+                </div>
+                <i id="arrow-dbv2-stream" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dbv2-stream" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">bookId</label>
+                        <input type="text" id="input-dbv2-stream-id" value="42000000193" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-cyan-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">episode</label>
+                        <input type="number" id="input-dbv2-stream-ep" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-cyan-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-dbv2-stream" onclick="testGetEndpoint('dbv2-stream', '/api/dramaboxv2/stream', { bookId: document.getElementById('input-dbv2-stream-id').value, episode: document.getElementById('input-dbv2-stream-ep').value })" 
+                    class="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play-circle text-[10px]"></i> Get Stream
+                </button>
+                <div id="result-header-dbv2-stream" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dbv2-stream" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-purple-900/30 bg-gray-900 overflow-hidden transition-all hover:border-purple-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-purple-900/10 transition" onclick="toggleAccordion('gen-header4')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-purple-600/20 text-purple-400 border border-purple-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-purple-400">DB V2: Refresh Token</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramaboxv2/refresh-token</code>
+                </div>
+                <i id="arrow-gen-header4" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-gen-header4" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Merefresh token yang digenerate oleh server.</p>
+                <button id="btn-gen-header4" onclick="testGetEndpoint('gen-header4', '/api/dramaboxv2/refresh-token', {})" 
+                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-gear text-[10px]"></i> Refresh Token
+                </button>
+                <div id="result-header-gen-header4" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-gen-header4" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-4 mt-8 pt-4 border-t border-gray-800">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-indigo-400 flex items-center gap-2">
+                <i class="fa-solid fa-bolt"></i> NetShort Endpoints
+            </h2>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700 shadow-[0_0_15px_rgba(79,70,229,0.05)]">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-indigo-900/10 transition" onclick="toggleAccordion('ns-search')">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-indigo-200">NS: Search</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/netshort/search</code>
+                </div>
+                <i id="arrow-ns-search" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ns-search" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">q (keyword)</label>
+                        <input type="text" id="input-ns-search-q" value="ceo" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-ns-search-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">size</label>
+                        <input type="number" id="input-ns-search-size" value="10" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-ns-search" onclick="testGetEndpoint('ns-search', '/api/netshort/search', { q: document.getElementById('input-ns-search-q').value, page: document.getElementById('input-ns-search-page').value, size: document.getElementById('input-ns-search-size').value })" 
+                    class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-bolt text-[10px]"></i> Test NetShort
+                </button>
+                <div id="result-header-ns-search" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ns-search" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-indigo-900/10 transition" onclick="toggleAccordion('ns-explore')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-indigo-200">NS: Explore / Home</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/netshort/explore</code>
+                </div>
+                <i id="arrow-ns-explore" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ns-explore" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-ns-explore-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">limit</label>
+                        <input type="number" id="input-ns-explore-limit" value="15" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-ns-explore" onclick="testGetEndpoint('ns-explore', '/api/netshort/explore', { page: document.getElementById('input-ns-explore-page').value, limit: document.getElementById('input-ns-explore-limit').value })" 
+                    class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-bolt text-[10px]"></i> Test NetShort
+                </button>
+                <div id="result-header-ns-explore" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ns-explore" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-indigo-900/10 transition" onclick="toggleAccordion('ns-categories')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-indigo-200">NS: Categories</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/netshort/categories</code>
+                </div>
+                <i id="arrow-ns-categories" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ns-categories" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-ns-categories-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">limit</label>
+                        <input type="number" id="input-ns-categories-limit" value="15" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-ns-categories" onclick="testGetEndpoint('ns-categories', '/api/netshort/categories', { page: document.getElementById('input-ns-categories-page').value, limit: document.getElementById('input-ns-categories-limit').value })" 
+                    class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-bolt text-[10px]"></i> Test NetShort
+                </button>
+                <div id="result-header-ns-categories" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ns-categories" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-indigo-900/10 transition" onclick="toggleAccordion('ns-discover')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-indigo-200">NS: Discover (Filter)</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/netshort/discover</code>
+                </div>
+                <i id="arrow-ns-discover" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ns-discover" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">tag</label>
+                        <input type="text" id="input-ns-discover-tag" value="semua" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">sort</label>
+                        <input type="text" id="input-ns-discover-sort" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">region</label>
+                        <input type="text" id="input-ns-discover-region" value="0" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">lang (audio)</label>
+                        <input type="text" id="input-ns-discover-lang" value="0" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">page</label>
+                        <input type="number" id="input-ns-discover-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">limit</label>
+                        <input type="number" id="input-ns-discover-limit" value="15" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-ns-discover" onclick="testGetEndpoint('ns-discover', '/api/netshort/discover', { tag: document.getElementById('input-ns-discover-tag').value, sort: document.getElementById('input-ns-discover-sort').value, region: document.getElementById('input-ns-discover-region').value, lang: document.getElementById('input-ns-discover-lang').value, page: document.getElementById('input-ns-discover-page').value, limit: document.getElementById('input-ns-discover-limit').value })" 
+                    class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-filter text-[10px]"></i> Apply Filter
+                </button>
+                <div id="result-header-ns-discover" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ns-discover" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-indigo-900/10 transition" onclick="toggleAccordion('ns-detail')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-indigo-200">NS: Drama Info</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/netshort/detail/:id</code>
+                </div>
+                <i id="arrow-ns-detail" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ns-detail" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">shortPlayId</label>
+                        <input type="text" id="input-ns-detail-id" value="1945011083140005889" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">quality</label>
+                        <select id="input-ns-detail-quality" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                             <option value="540p">540p</option>
+                             <option value="720p">720p</option>
+                             <option value="1080p">1080p</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="btn-ns-detail" onclick="testGetEndpoint('ns-detail', '/api/netshort/detail/:id', { id: document.getElementById('input-ns-detail-id').value, quality: document.getElementById('input-ns-detail-quality').value })" 
+                    class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-circle-info text-[10px]"></i> Get Info
+                </button>
+                <div id="result-header-ns-detail" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ns-detail" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-indigo-900/10 transition" onclick="toggleAccordion('ns-watch')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-indigo-200">NS: Watch Episode</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/netshort/watch/:id/ep/:ep</code>
+                </div>
+                <i id="arrow-ns-watch" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ns-watch" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">shortPlayId</label>
+                        <input type="text" id="input-ns-watch-id" value="1945011083140005889" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">episodeNo</label>
+                        <input type="number" id="input-ns-watch-ep" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                    </div>
+                     <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">quality</label>
+                         <select id="input-ns-watch-quality" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-indigo-500 outline-none">
+                             <option value="540p">540p</option>
+                             <option value="720p">720p</option>
+                             <option value="1080p">1080p</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="btn-ns-watch" onclick="testGetEndpoint('ns-watch', '/api/netshort/watch/:id/ep/:ep', { id: document.getElementById('input-ns-watch-id').value, ep: document.getElementById('input-ns-watch-ep').value, quality: document.getElementById('input-ns-watch-quality').value })" 
+                    class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play-circle text-[10px]"></i> Get Stream URL
+                </button>
+                <div id="result-header-ns-watch" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ns-watch" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-indigo-900/10 transition" onclick="toggleAccordion('ns-configs')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-teal-600/20 text-teal-400 border border-teal-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-teal-200">NS: Meta Configs</h3>
+                    <span class="text-[10px] text-gray-500">(Constants, Tags, Regions, Audio, Sort)</span>
+                </div>
+                <i id="arrow-ns-configs" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ns-configs" class="hidden border-t border-gray-800 bg-black/20 p-4 space-y-3">
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Meta Constants (All)</span>
+                    <button onclick="testGetEndpoint('ns-configs', '/api/netshort/config/constants', {})" class="text-[10px] bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded">Test</button>
+                </div>
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Meta Tags</span>
+                    <button onclick="testGetEndpoint('ns-configs', '/api/netshort/config/tags', {})" class="text-[10px] bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded">Test</button>
+                </div>
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Meta Regions</span>
+                    <button onclick="testGetEndpoint('ns-configs', '/api/netshort/config/regions', {})" class="text-[10px] bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded">Test</button>
+                </div>
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Meta Audio</span>
+                    <button onclick="testGetEndpoint('ns-configs', '/api/netshort/config/audio', {})" class="text-[10px] bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded">Test</button>
+                </div>
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Meta Sort</span>
+                    <button onclick="testGetEndpoint('ns-configs', '/api/netshort/config/sort', {})" class="text-[10px] bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded">Test</button>
+                </div>
+
+                <div id="result-header-ns-configs" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ns-configs" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+         <div class="rounded-lg border border-purple-900/30 bg-gray-900 overflow-hidden transition-all hover:border-purple-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-purple-900/10 transition" onclick="toggleAccordion('ns-auth')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-purple-600/20 text-purple-400 border border-purple-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-purple-400">NS: Refresh Token</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/netshort/refresh-token</code>
+                </div>
+                <i id="arrow-ns-auth" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-ns-auth" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Merefresh token & device ID.</p>
+                <button id="btn-ns-auth" onclick="testGetEndpoint('ns-auth', '/api/netshort/refresh-token', {})" 
+                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-gear text-[10px]"></i> Refresh Token
+                </button>
+                <div id="result-header-ns-auth" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ns-auth" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between mb-4 mt-8 pt-4 border-t border-gray-800">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-pink-400 flex items-center gap-2">
+                <i class="fa-solid fa-heart"></i> Melolo Endpoints
+            </h2>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700 shadow-[0_0_15px_rgba(236,72,153,0.05)]">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-pink-900/10 transition" onclick="toggleAccordion('ml-search')">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-pink-600/20 text-pink-400 border border-pink-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-pink-200">ML: Search</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/melolo/search</code>
+                </div>
+                <i id="arrow-ml-search" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ml-search" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">q (keyword)</label>
+                        <input type="text" id="input-ml-search-q" value="ceo" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-pink-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-ml-search" onclick="testGetEndpoint('ml-search', '/api/melolo/search', { q: document.getElementById('input-ml-search-q').value })" 
+                    class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-bolt text-[10px]"></i> Test Melolo
+                </button>
+                <div id="result-header-ml-search" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ml-search" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-pink-900/10 transition" onclick="toggleAccordion('ml-lists')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-pink-600/20 text-pink-400 border border-pink-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-pink-200">ML: Lists (Trending/Latest)</h3>
+                </div>
+                <i id="arrow-ml-lists" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ml-lists" class="hidden border-t border-gray-800 bg-black/20 p-4 space-y-3">
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Trending</span>
+                    <button onclick="testGetEndpoint('ml-lists', '/api/melolo/trending', {})" class="text-[10px] bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded">Test</button>
+                </div>
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Latest</span>
+                    <button onclick="testGetEndpoint('ml-lists', '/api/melolo/latest', {})" class="text-[10px] bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded">Test</button>
+                </div>
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Recommend</span>
+                    <button onclick="testGetEndpoint('ml-lists', '/api/melolo/recommend', {})" class="text-[10px] bg-pink-600 hover:bg-pink-700 px-2 py-1 rounded">Test</button>
+                </div>
+
+                <div id="result-header-ml-lists" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ml-lists" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-pink-900/10 transition" onclick="toggleAccordion('ml-detail')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-pink-600/20 text-pink-400 border border-pink-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-pink-200">ML: Detail & Episodes</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/melolo/detail</code>
+                </div>
+                <i id="arrow-ml-detail" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ml-detail" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">id (Book ID)</label>
+                    <input type="text" id="input-ml-detail-id" value="7582900611222342661" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-pink-500 outline-none">
+                </div>
+                <button id="btn-ml-detail" onclick="testGetEndpoint('ml-detail', '/api/melolo/detail', { id: document.getElementById('input-ml-detail-id').value })" 
+                    class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-circle-info text-[10px]"></i> Get Detail
+                </button>
+                <div id="result-header-ml-detail" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ml-detail" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-pink-900/10 transition" onclick="toggleAccordion('ml-watch')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-pink-600/20 text-pink-400 border border-pink-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-pink-200">ML: Watch (Stream)</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/melolo/watch</code>
+                </div>
+                <i id="arrow-ml-watch" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-ml-watch" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">vid (Video ID)</label>
+                    <input type="text" id="input-ml-watch-vid" value="7582919720509115445" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-pink-500 outline-none">
+                </div>
+                <button id="btn-ml-watch" onclick="testGetEndpoint('ml-watch', '/api/melolo/watch', { vid: document.getElementById('input-ml-watch-vid').value })" 
+                    class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play-circle text-[10px]"></i> Get Stream
+                </button>
+                <div id="result-header-ml-watch" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-ml-watch" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-purple-900/30 bg-gray-900 overflow-hidden transition-all hover:border-purple-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-purple-900/10 transition" onclick="toggleAccordion('gen-header2')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-purple-600/20 text-purple-400 border border-purple-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-purple-400">ML: Refresh Token</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/melolo/refresh-token</code>
+                </div>
+                <i id="arrow-gen-header2" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-gen-header2" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Merefresh token yang digenerate oleh server.</p>
+                <button id="btn-gen-header2" onclick="testGetEndpoint('gen-header2', '/api/melolo/refresh-token', {})" 
+                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-gear text-[10px]"></i> Refresh Token
+                </button>
+                <div id="result-header-gen-header2" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-gen-header2" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-4 mt-8 pt-4 border-t border-gray-800">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-orange-400 flex items-center gap-2">
+                <i class="fa-solid fa-play"></i> DramaDash Endpoints
+            </h2>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-orange-900/10 transition" onclick="toggleAccordion('dd-home')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-orange-600/20 text-orange-400 border border-orange-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-orange-200">DD: Home</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramadash/home</code>
+                </div>
+                <i id="arrow-dd-home" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dd-home" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <button id="btn-dd-home" onclick="testGetEndpoint('dd-home', '/api/dramadash/home', {})" 
+                    class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-house text-[10px]"></i> Get Home
+                </button>
+                <div id="result-header-dd-home" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dd-home" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-orange-900/10 transition" onclick="toggleAccordion('dd-search')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-orange-600/20 text-orange-400 border border-orange-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-orange-200">DD: Search</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramadash/search</code>
+                </div>
+                <i id="arrow-dd-search" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dd-search" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">q (query)</label>
+                    <input type="text" id="input-dd-search-q" value="ceo" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-orange-500 outline-none">
+                </div>
+                <button id="btn-dd-search" onclick="testGetEndpoint('dd-search', '/api/dramadash/search', { q: document.getElementById('input-dd-search-q').value })" 
+                    class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search
+                </button>
+                <div id="result-header-dd-search" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dd-search" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-orange-900/10 transition" onclick="toggleAccordion('dd-detail')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-orange-600/20 text-orange-400 border border-orange-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-orange-200">DD: Detail</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramadash/detail/:id</code>
+                </div>
+                <i id="arrow-dd-detail" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dd-detail" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">id (Drama ID)</label>
+                    <input type="text" id="input-dd-detail-id" value="56" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-orange-500 outline-none">
+                </div>
+                <button id="btn-dd-detail" onclick="testGetEndpoint('dd-detail', '/api/dramadash/detail/:id', { id: document.getElementById('input-dd-detail-id').value })" 
+                    class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-circle-info text-[10px]"></i> Get Detail
+                </button>
+                <div id="result-header-dd-detail" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dd-detail" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-orange-900/10 transition" onclick="toggleAccordion('dd-watch')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-orange-600/20 text-orange-400 border border-orange-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-orange-200">DD: Watch Episode</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramadash/watch</code>
+                </div>
+                <i id="arrow-dd-watch" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dd-watch" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">id (Drama ID)</label>
+                        <input type="text" id="input-dd-watch-id" value="56" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-orange-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">e (Episode No)</label>
+                        <input type="number" id="input-dd-watch-e" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-orange-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-dd-watch" onclick="testGetEndpoint('dd-watch', '/api/dramadash/watch', { id: document.getElementById('input-dd-watch-id').value, e: document.getElementById('input-dd-watch-e').value })" 
+                    class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Get Stream
+                </button>
+                <div id="result-header-dd-watch" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dd-watch" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-purple-900/30 bg-gray-900 overflow-hidden transition-all hover:border-purple-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-purple-900/10 transition" onclick="toggleAccordion('gen-header3')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-purple-600/20 text-purple-400 border border-purple-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-purple-400">DD: Refresh Token</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramadash/refresh-token</code>
+                </div>
+                <i id="arrow-gen-header3" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-gen-header3" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Merefresh token yang digenerate oleh server.</p>
+                <button id="btn-gen-header3" onclick="testGetEndpoint('gen-header3', '/api/dramadash/refresh-token', {})" 
+                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-gear text-[10px]"></i> Refresh Token
+                </button>
+                <div id="result-header-gen-header3" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-gen-header3" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-4 mt-8 pt-4 border-t border-gray-800">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-teal-400 flex items-center gap-2">
+                <i class="fa-solid fa-water"></i> Dramawave Endpoints
+            </h2>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700 shadow-[0_0_15px_rgba(45,212,191,0.05)]">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-teal-900/10 transition" onclick="toggleAccordion('dw-search')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-teal-600/20 text-teal-400 border border-teal-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-teal-200">DW: Search</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramawave/search</code>
+                </div>
+                <i id="arrow-dw-search" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dw-search" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">q (query)</label>
+                    <input type="text" id="input-dw-search-q" value="ceo" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-teal-500 outline-none">
+                </div>
+                <button id="btn-dw-search" onclick="testGetEndpoint('dw-search', '/api/dramawave/search', { q: document.getElementById('input-dw-search-q').value })" 
+                    class="bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search
+                </button>
+                <div id="result-header-dw-search" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dw-search" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700 shadow-[0_0_15px_rgba(45,212,191,0.05)]">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-teal-900/10 transition" onclick="toggleAccordion('dw-search-sug')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-teal-600/20 text-teal-400 border border-teal-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-teal-200">DW: Search Suggest</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramawave/search/suggest</code>
+                </div>
+                <i id="arrow-dw-search-sug" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dw-search-sug" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">q (query)</label>
+                    <input type="text" id="input-dw-search-sug-q" value="ceo" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-teal-500 outline-none">
+                </div>
+                <button id="btn-dw-search-sug" onclick="testGetEndpoint('dw-search-sug', '/api/dramawave/search/suggest', { q: document.getElementById('input-dw-search-sug-q').value })" 
+                    class="bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search
+                </button>
+                <div id="result-header-dw-search-sug" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dw-search-sug" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-teal-900/10 transition" onclick="toggleAccordion('dw-tabs')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-teal-600/20 text-teal-400 border border-teal-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-teal-200">DW: List Tabs</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramawave/tabs</code>
+                </div>
+                <i id="arrow-dw-tabs" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dw-tabs" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">List semua ID tab kategori yang tersedia.</p>
+                <button id="btn-dw-tabs" onclick="testGetEndpoint('dw-tabs', '/api/dramawave/tabs', {})" 
+                    class="bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-list text-[10px]"></i> Get List Tabs
+                </button>
+                <div id="result-header-dw-tabs" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dw-tabs" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-teal-900/10 transition" onclick="toggleAccordion('dw-tab-content')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-teal-600/20 text-teal-400 border border-teal-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-teal-200">DW: Tab Content</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramawave/tab/:id</code>
+                </div>
+                <i id="arrow-dw-tab-content" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dw-tab-content" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Mengambil konten berdasarkan ID tab (gunakan ID dari List Tabs).</p>
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">id (Tab ID)</label>
+                    <input type="text" id="input-dw-tab-content-id" value="678" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-teal-500 outline-none">
+                </div>
+                <button id="btn-dw-tab-content" onclick="testGetEndpoint('dw-tab-content', '/api/dramawave/tab/:id', { id: document.getElementById('input-dw-tab-content-id').value })" 
+                    class="bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play text-[10px]"></i> Get Content
+                </button>
+                <div id="result-header-dw-tab-content" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dw-tab-content" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-teal-900/10 transition" onclick="toggleAccordion('dw-category')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-teal-600/20 text-teal-400 border border-teal-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-teal-200">DW: Category</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramawave/category/:slug</code>
+                </div>
+                <i id="arrow-dw-category" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dw-category" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">slug</label>
+                    <select id="input-dw-category-slug" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-teal-500 outline-none">
+                        <option value="popular">Populer</option>
+                        <option value="upcoming">Segera Hadir</option>
+                        <option value="event">Event</option>
+                        <option value="new">Terbaru</option>
+                        <option value="exclusive">Eksklusif</option>
+                        <option value="dubbing">Dubbing</option>
+                        <option value="vip">VIP</option>
+                        <option value="female">Perempuan</option>
+                        <option value="male">Laki-laki</option>
+                        <option value="free">Gratis</option>
+                        <option value="anime">Anime</option>
+                    </select>
+                </div>
+                <button id="btn-dw-category" onclick="testGetEndpoint('dw-category', '/api/dramawave/category/:slug', { slug: document.getElementById('input-dw-category-slug').value })" 
+                    class="bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-filter text-[10px]"></i> Get Category
+                </button>
+                <div id="result-header-dw-category" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dw-category" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-teal-900/10 transition" onclick="toggleAccordion('dw-detail')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-teal-600/20 text-teal-400 border border-teal-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-teal-200">DW: Detail</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramawave/detail/:id</code>
+                </div>
+                <i id="arrow-dw-detail" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dw-detail" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">id (Series ID)</label>
+                    <input type="text" id="input-dw-detail-id" value="TJDQIWr5Z8" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-teal-500 outline-none">
+                </div>
+                <button id="btn-dw-detail" onclick="testGetEndpoint('dw-detail', '/api/dramawave/detail/:id', { id: document.getElementById('input-dw-detail-id').value })" 
+                    class="bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-circle-info text-[10px]"></i> Get Detail
+                </button>
+                <div id="result-header-dw-detail" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dw-detail" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-teal-900/10 transition" onclick="toggleAccordion('dw-feeds')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-teal-600/20 text-teal-400 border border-teal-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-teal-200">DW: Feeds & Hot</h3>
+                </div>
+                <i id="arrow-dw-feeds" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            <div id="content-dw-feeds" class="hidden border-t border-gray-800 bg-black/20 p-4 space-y-3">
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">For You (Feed)</span>
+                    <button onclick="testGetEndpoint('dw-feeds', '/api/dramawave/foryou', {})" class="text-[10px] bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded">Test</button>
+                </div>
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Hot List</span>
+                    <button onclick="testGetEndpoint('dw-feeds', '/api/dramawave/hot-list', {})" class="text-[10px] bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded">Test</button>
+                </div>
+                 <div class="flex items-center justify-between bg-gray-800/50 p-2 rounded">
+                    <span class="text-xs text-gray-300">Hot Words</span>
+                    <button onclick="testGetEndpoint('dw-feeds', '/api/dramawave/hot-words', {})" class="text-[10px] bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded">Test</button>
+                </div>
+                
+                <div id="result-header-dw-feeds" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-dw-feeds" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+         <div class="rounded-lg border border-purple-900/30 bg-gray-900 overflow-hidden transition-all hover:border-purple-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-purple-900/10 transition" onclick="toggleAccordion('gen-header-dw')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-purple-600/20 text-purple-400 border border-purple-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-purple-400">DW: Refresh Token</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/dramawave/refresh-token</code>
+                </div>
+                <i id="arrow-gen-header-dw" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-gen-header-dw" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Merefresh token Dramawave & FreeReels.</p>
+                <button id="btn-gen-header-dw" onclick="testGetEndpoint('gen-header-dw', '/api/dramawave/refresh-token', {})" 
+                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-gear text-[10px]"></i> Refresh Token
+                </button>
+                <div id="result-header-gen-header-dw" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-gen-header-dw" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between mb-4 mt-8 pt-4 border-t border-gray-800">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-rose-400 flex items-center gap-2">
+                <i class="fa-solid fa-clapperboard"></i> Flickreel Endpoints
+            </h2>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700 shadow-[0_0_15px_rgba(244,63,94,0.05)]">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-rose-900/10 transition" onclick="toggleAccordion('fl-search')">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-rose-600/20 text-rose-400 border border-rose-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-rose-200">FL: Search</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/flickreel/search</code>
+                </div>
+                <i id="arrow-fl-search" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-fl-search" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">q (keyword)</label>
+                    <input type="text" id="input-fl-search-q" value="love" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-rose-500 outline-none">
+                </div>
+                <button id="btn-fl-search" onclick="testGetEndpoint('fl-search', '/api/flickreel/search', { q: document.getElementById('input-fl-search-q').value })" 
+                    class="bg-rose-600 hover:bg-rose-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-magnifying-glass text-[10px]"></i> Search
+                </button>
+                <div id="result-header-fl-search" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-fl-search" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-rose-900/10 transition" onclick="toggleAccordion('fl-lists')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-rose-600/20 text-rose-400 border border-rose-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-rose-200">FL: Feeds & Lists</h3>
+                    <span class="text-[10px] text-gray-500">(Home, Latest, Rank, etc)</span>
+                </div>
+                <i id="arrow-fl-lists" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-fl-lists" class="hidden border-t border-gray-800 bg-black/20 p-4 space-y-3">
+                 <div class="flex flex-col mb-2">
+                    <label class="text-xs text-gray-500 mb-1">page (Optional)</label>
+                    <input type="number" id="input-fl-lists-page" value="1" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-rose-500 outline-none w-full md:w-1/3">
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <button onclick="testGetEndpoint('fl-lists', '/api/flickreel/home', { page: document.getElementById('input-fl-lists-page').value })" class="text-[10px] bg-gray-800 hover:bg-rose-600 border border-gray-700 hover:border-rose-500 text-gray-300 hover:text-white px-3 py-2 rounded transition">Home</button>
+                    <button onclick="testGetEndpoint('fl-lists', '/api/flickreel/latest', { page: document.getElementById('input-fl-lists-page').value })" class="text-[10px] bg-gray-800 hover:bg-rose-600 border border-gray-700 hover:border-rose-500 text-gray-300 hover:text-white px-3 py-2 rounded transition">Latest</button>
+                    <button onclick="testGetEndpoint('fl-lists', '/api/flickreel/hot-rank', {})" class="text-[10px] bg-gray-800 hover:bg-rose-600 border border-gray-700 hover:border-rose-500 text-gray-300 hover:text-white px-3 py-2 rounded transition">Hot Rank</button>
+                    <button onclick="testGetEndpoint('fl-lists', '/api/flickreel/event', { page: document.getElementById('input-fl-lists-page').value })" class="text-[10px] bg-gray-800 hover:bg-rose-600 border border-gray-700 hover:border-rose-500 text-gray-300 hover:text-white px-3 py-2 rounded transition">Event</button>
+                    <button onclick="testGetEndpoint('fl-lists', '/api/flickreel/romance', { page: document.getElementById('input-fl-lists-page').value })" class="text-[10px] bg-gray-800 hover:bg-rose-600 border border-gray-700 hover:border-rose-500 text-gray-300 hover:text-white px-3 py-2 rounded transition">Romance</button>
+                    <button onclick="testGetEndpoint('fl-lists', '/api/flickreel/ranking', {})" class="text-[10px] bg-gray-800 hover:bg-rose-600 border border-gray-700 hover:border-rose-500 text-gray-300 hover:text-white px-3 py-2 rounded transition">Ranking</button>
+                    <button onclick="testGetEndpoint('fl-lists', '/api/flickreel/recommend', {})" class="text-[10px] bg-gray-800 hover:bg-rose-600 border border-gray-700 hover:border-rose-500 text-gray-300 hover:text-white px-3 py-2 rounded transition">Recommend</button>
+                </div>
+
+                <div id="result-header-fl-lists" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-fl-lists" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-rose-900/10 transition" onclick="toggleAccordion('fl-detail')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-rose-600/20 text-rose-400 border border-rose-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-rose-200">FL: Detail</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/flickreel/detail</code>
+                </div>
+                <i id="arrow-fl-detail" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-fl-detail" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="flex flex-col mb-4">
+                    <label class="text-xs text-gray-500 mb-1">id (Playlet ID)</label>
+                    <input type="text" id="input-fl-detail-id" value="4187" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-rose-500 outline-none">
+                </div>
+                <button id="btn-fl-detail" onclick="testGetEndpoint('fl-detail', '/api/flickreel/detail', { id: document.getElementById('input-fl-detail-id').value })" 
+                    class="bg-rose-600 hover:bg-rose-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-circle-info text-[10px]"></i> Get Detail
+                </button>
+                <div id="result-header-fl-detail" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-fl-detail" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-gray-800 bg-gray-900 overflow-hidden transition-all hover:border-gray-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-rose-900/10 transition" onclick="toggleAccordion('fl-stream')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-rose-600/20 text-rose-400 border border-rose-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-rose-200">FL: Stream</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/flickreel/stream</code>
+                </div>
+                <i id="arrow-fl-stream" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-fl-stream" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">id (Playlet ID)</label>
+                        <input type="text" id="input-fl-stream-id" value="4187" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-rose-500 outline-none">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs text-gray-500 mb-1">chapter_id</label>
+                        <input type="text" id="input-fl-stream-cid" value="38814" class="bg-gray-800 border border-gray-700 rounded p-2 text-xs text-white focus:border-rose-500 outline-none">
+                    </div>
+                </div>
+                <button id="btn-fl-stream" onclick="testGetEndpoint('fl-stream', '/api/flickreel/stream', { id: document.getElementById('input-fl-stream-id').value, chapter_id: document.getElementById('input-fl-stream-cid').value })" 
+                    class="bg-rose-600 hover:bg-rose-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-play-circle text-[10px]"></i> Get Stream
+                </button>
+                <div id="result-header-fl-stream" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-fl-stream" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+        <div class="rounded-lg border border-purple-900/30 bg-gray-900 overflow-hidden transition-all hover:border-purple-700">
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-purple-900/10 transition" onclick="toggleAccordion('fl-auth')">
+                <div class="flex items-center gap-3">
+                    <span class="px-2.5 py-0.5 text-[10px] font-bold rounded bg-purple-600/20 text-purple-400 border border-purple-600/30">GET</span>
+                    <h3 class="font-semibold text-sm text-purple-400">FL: Refresh Token</h3>
+                    <code class="font-mono text-gray-500 text-xs hidden sm:block">/api/flickreel/auth/refresh</code>
+                </div>
+                <i id="arrow-fl-auth" class="fa-solid fa-chevron-right text-gray-500 text-sm transition-transform duration-200"></i>
+            </div>
+            
+            <div id="content-fl-auth" class="hidden border-t border-gray-800 bg-black/20 p-4">
+                <p class="mb-3 text-xs text-gray-400">Merefresh token & device identity Flickreel.</p>
+                <button id="btn-fl-auth" onclick="testGetEndpoint('fl-auth', '/api/flickreel/auth/refresh', {})" 
+                    class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded text-xs font-semibold flex items-center gap-2 transition">
+                    <i class="fa-solid fa-gear text-[10px]"></i> Refresh Token
+                </button>
+                <div id="result-header-fl-auth" class="mt-4 hidden p-3 rounded-t bg-gray-800 border border-gray-700 text-xs"></div>
+                <pre id="result-content-fl-auth" class="hidden p-3 rounded-b bg-gray-900 border border-t-0 border-gray-700 text-xs max-h-[300px] overflow-y-auto font-mono whitespace-pre-wrap break-all"></pre>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<footer class="mt-12 border-t border-gray-800 bg-gray-900/30 pt-6 pb-6">
+    <div class="container mx-auto px-4 max-w-4xl">
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+            
+            <a href="https://sankavollerei.com/" target="_blank" 
+               class="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-800/40 border border-gray-700/50 hover:bg-gray-800 hover:border-blue-500 transition group active:scale-95">
+                <div class="h-8 w-8 rounded-full bg-blue-500/10 flex items-center justify-center mb-1.5 group-hover:bg-blue-500/20 transition">
+                    <i class="fa-solid fa-code text-blue-400 text-xs group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="text-[10px] text-gray-400 font-medium group-hover:text-white">My Project</span>
+            </a>
+
+            <a href="https://link.sankanime.com/" target="_blank" 
+               class="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-800/40 border border-gray-700/50 hover:bg-gray-800 hover:border-purple-500 transition group active:scale-95">
+                <div class="h-8 w-8 rounded-full bg-purple-500/10 flex items-center justify-center mb-1.5 group-hover:bg-purple-500/20 transition">
+                    <i class="fa-solid fa-link text-purple-400 text-xs group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="text-[10px] text-gray-400 font-medium group-hover:text-white">Link Sankanime</span>
+            </a>
+
+            <a href="https://www.whatsapp.com/channel/0029VbBv5edGk1Fo8WbsAK1V" target="_blank" 
+               class="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-800/40 border border-gray-700/50 hover:bg-gray-800 hover:border-green-500 transition group active:scale-95">
+                <div class="h-8 w-8 rounded-full bg-green-500/10 flex items-center justify-center mb-1.5 group-hover:bg-green-500/20 transition">
+                    <i class="fa-brands fa-whatsapp text-green-400 text-sm group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="text-[10px] text-gray-400 font-medium group-hover:text-white">Komunitas</span>
+            </a>
+
+            <a href="https://sociabuzz.com/sankanime/tribe" target="_blank" 
+               class="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-800/40 border border-gray-700/50 hover:bg-gray-800 hover:border-pink-500 transition group active:scale-95">
+                <div class="h-8 w-8 rounded-full bg-pink-500/10 flex items-center justify-center mb-1.5 group-hover:bg-pink-500/20 transition">
+                    <i class="fa-solid fa-heart text-pink-400 text-xs group-hover:scale-110 transition-transform"></i>
+                </div>
+                <span class="text-[10px] text-gray-400 font-medium group-hover:text-white">Donate Me</span>
+            </a>
+
+        </div>
+
+        <div class="text-center border-t border-gray-800 pt-4 flex flex-col gap-1">
+            <p class="text-[10px] text-gray-600 font-mono">Dramabox Api v1.1.0</p>
+            <p class="text-[10px] text-gray-600">
+                Created by <span class="text-blue-500/80">Sankanime</span>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+
+const envPublicUrl = "<%= publicUrl %>"; 
+const cleanPublicUrl = envPublicUrl ? envPublicUrl.replace(/\/$/, '') : '';
+const globalBaseUrl = cleanPublicUrl || window.location.origin;
+
+document.getElementById('baseUrlText').innerText = globalBaseUrl;
+
+let currentLang = 'in';
+const languageMap = [
+    { code: 'in', name: '🇮🇩 Indonesia' },
+    { code: 'en', name: '🇺🇸 English' },
+    { code: 'ja', name: '🇯🇵 日本語' },
+    { code: 'zhHans', name: '🇨🇳 简体中文' },
+    { code: 'zh', name: '🇹🇼 繁體中文' },
+    { code: 'es', name: '🇪🇸 Español' },
+    { code: 'de', name: '🇩🇪 Deutsch' },
+    { code: 'fr', name: '🇫🇷 Français' },
+    { code: 'pt', name: '🇵🇹 Português' },
+    { code: 'ar', name: '🇸🇦 العربية' },
+    { code: 'th', name: '🇹🇭 ไทย' },
+    { code: 'tl', name: '🇵🇭 Tagalog' }
+];
+
+function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check text-green-400"></i>';
+        setTimeout(() => {
+            btn.innerHTML = originalContent;
+        }, 1500);
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        alert('Gagal menyalin teks');
+    });
+}
+
+function copyElementText(elementId, btn) {
+    const text = document.getElementById(elementId).innerText;
+    copyText(text, btn);
+} 
+
+function initializeLanguageSelector() {
+    const selector = document.getElementById('langOptionsContainer'); 
+    const currentLangDisplay = document.getElementById('currentLang'); 
+    const langBtn = document.getElementById("langDropdownBtn");
+    const langMenu = document.getElementById("langMenu");
+    const defaultLang = 'in';
+
+    languageMap.forEach(lang => {
+        const button = document.createElement('button');
+        button.className = 'block w-full text-left px-4 py-2 text-xs text-gray-300 hover:bg-blue-600 hover:text-white transition';
+        button.setAttribute('data-lang', lang.code);
+        button.textContent = lang.name;
+        
+        button.addEventListener("click", () => {
+            currentLang = lang.code;
+            currentLangDisplay.innerText = lang.name; 
+            langMenu.classList.add("hidden");
+        });
+        
+        selector.appendChild(button);
+    });
+
+    const defaultLangItem = languageMap.find(l => l.code === defaultLang);
+    if (defaultLangItem) {
+        currentLang = defaultLang;
+        currentLangDisplay.innerText = defaultLangItem.name;
+    }
+
+    langBtn.addEventListener("click", () => langMenu.classList.toggle("hidden"));
+
+    document.addEventListener('click', function(event) {
+        if (!langBtn.contains(event.target) && !langMenu.contains(event.target)) {
+            langMenu.classList.add('hidden');
+        }
+    });
+}
+
+function toggleAccordion(endpointId) {
+    const content = document.getElementById(`content-${endpointId}`);
+    const arrow = document.getElementById(`arrow-${endpointId}`);
+
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        arrow.classList.add('rotate-90');
+    } else {
+        content.classList.add('hidden');
+        arrow.classList.remove('rotate-90');
+    }
+}
+
+function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+         json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'json-number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'json-key';
+            } else {
+                cls = 'json-string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'json-boolean';
+        } else if (/null/.test(match)) {
+            cls = 'json-null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
+function displayResult(id, data, error, responseTimeMs, url) {
+  const headerDiv = document.getElementById('result-header-' + id);
+  const contentDiv = document.getElementById('result-content-' + id);
+  headerDiv.classList.remove('hidden');
+  contentDiv.classList.remove('hidden');
+  const urlBoxHtml = url ? `
+    <div class="mt-3 p-3 bg-black/40 rounded border border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group hover:border-blue-500/50 transition">
+        <div class="flex flex-col gap-1 overflow-hidden w-full">
+            <span class="text-[9px] uppercase text-gray-500 font-bold tracking-wider">Request URL</span>
+            <code class="text-[11px] text-blue-400 font-mono break-all leading-tight">${url}</code>
+        </div>
+        
+        <div class="flex gap-3 shrink-0 self-end sm:self-auto">
+            <button onclick="copyText('${url}', this)" 
+                class="h-8 w-8 flex items-center justify-center bg-gray-800 hover:bg-gray-700 rounded text-gray-400 hover:text-white border border-gray-700 transition" title="Copy Full URL">
+                <i class="fa-regular fa-copy text-xs"></i>
+            </button>
+            <a href="${url}" target="_blank" 
+                class="h-8 w-8 flex items-center justify-center bg-gray-800 hover:bg-gray-700 rounded text-gray-400 hover:text-blue-400 border border-gray-700 transition" title="Open in New Tab">
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+        </div>
+    </div>` : '';
+
+  if (error) {
+    headerDiv.innerHTML = `
+        <div class="flex justify-between items-center text-red-400 font-bold mb-1">
+            <span>❌ GAGAL</span> 
+            <span class="text-[10px] font-mono text-gray-500">${responseTimeMs.toFixed(0)}ms</span>
+        </div>
+        ${urlBoxHtml}
+    `;
+    contentDiv.innerHTML = syntaxHighlight({ error: error });
+  } else {
+    headerDiv.innerHTML = `
+        <div>
+            <div class="flex justify-between items-center text-green-400 font-bold">
+                <div class="flex items-center gap-3">
+                    <span>✅ SUKSES</span>
+                    <button onclick="copyElementText('result-content-${id}', this)" 
+                        class="text-[10px] bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 text-gray-300 px-2 py-1 rounded transition flex items-center gap-1.5" title="Copy JSON Result">
+                        <i class="fa-regular fa-copy"></i> Copy JSON
+                    </button>
+                </div>
+                <span class="text-[10px] font-mono text-gray-500">${responseTimeMs.toFixed(0)}ms</span>
+            </div>
+            ${urlBoxHtml}
+        </div>`;
+    contentDiv.innerHTML = syntaxHighlight(data);
+  }
+}
+
+
+async function testGetEndpoint(endpointId, urlInput, defaultParams = {}) {
+    const btn = document.getElementById(`btn-${endpointId}`);
+    if(btn) btn.disabled = true;
+    const headerDiv = document.getElementById('result-header-' + endpointId);
+    const contentDiv = document.getElementById('result-content-' + endpointId);
+    headerDiv.classList.remove("hidden");
+    contentDiv.classList.add("hidden");
+    headerDiv.innerHTML = '<span class="text-blue-400 animate-pulse"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Memuat...</span>';
+    
+    const startTime = performance.now();
+    try {
+        const baseUrl = urlInput.startsWith('http') ?
+            urlInput : globalBaseUrl + urlInput;
+        const urlObj = new URL(baseUrl);
+        for (const [key, defaultValue] of Object.entries(defaultParams)) {
+            if (urlObj.pathname.includes(`:${key}`)) {
+                urlObj.pathname = urlObj.pathname.replace(`:${key}`, defaultValue);
+            } 
+            else if (defaultValue !== '') {
+                urlObj.searchParams.set(key, defaultValue);
+            }
+        }
+        
+        if (!urlObj.searchParams.has('lang')) {
+            urlObj.searchParams.set('lang', currentLang);
+        }
+        const finalUrl = urlObj.toString();
+        const response = await fetch(finalUrl);
+        const data = await response.json();
+        const endTime = performance.now(); 
+        if (!response.ok) throw new Error(`Status ${response.status} ${response.statusText}`);
+        displayResult(endpointId, data, null, endTime - startTime, finalUrl);
+    } catch (error) {
+        const fallbackUrl = globalBaseUrl + urlInput;
+        displayResult(endpointId, null, error.message, performance.now() - startTime, fallbackUrl);
+    } finally {
+        if(btn) btn.disabled = false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initializeLanguageSelector);
+</script>
+
+</body>
+</html>
